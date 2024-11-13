@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Submit an Obituary</title>
+    
+    <style>
+        form {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        label, input, textarea {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+        .navbar {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            transition: background 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div><a href="{% url 'view_obituaries' %}"></a>Home</div>
+        <div><a href="{% url 'view_obituaries' %}">View Obituaries</a></div>
+    </div>
+
+
+    <h1 style="text-align: center; margin-top: 20px;">Submit an Obituary</h1>
+    <form method="POST" enctype="multipart/form-data" action="{% url 'submit_obituary' %}">
+        {% csrf_token %}
+        
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+    
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="date_of_birth" required>
+    
+        <label for="dod">Date of Death:</label>
+        <input type="date" id="dod" name="date_of_death" required>
+    
+        <label for="content">Content:</label>
+        <textarea id="content" name="content" rows="4" required></textarea>
+    
+        <label for="author">Author:</label>
+        <input type="text" id="author" name="author" required>
+    
+        <label for="image">Image:</label>
+        <input type="file" id="image" name="image">
+    
+        <input type="submit" value="Submit Obituary">
+    </form>
+    
+</body>
+</html>

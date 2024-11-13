@@ -1,0 +1,199 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if obituary.name %}{{ obituary.name }} - Obituary{% else %}Obituary - Default Title{% endif %}</title>
+    
+    <meta name="description" content="{% if obituary.content %}{{ obituary.content|truncatewords:30 }}{% else %}No description available{% endif %}">
+    <meta name="keywords" content="obituary, memorial, tribute, obituary platform, obituary submission">
+    
+    <!-- Open Graph Meta Tags for Social Media -->
+    <meta property="og:title" content="{% if obituary.name %}{{ obituary.name }}{% else %}Obituary{% endif %}">
+    <meta property="og:description" content="{% if obituary.content %}{{ obituary.content|truncatewords:30 }}{% else %}A tribute to a loved one{% endif %}">
+    <meta property="og:image" content="{% if obituary.image %}{{ obituary.image.url }}{% else %}{% static 'john doe.jpg' %}{% endif %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    
+    <meta name="twitter:title" content="{% if obituary.name %}{{ obituary.name }}{% else %}Obituary{% endif %}">
+    <meta name="twitter:description" content="{% if obituary.content %}{{ obituary.content|truncatewords:30 }}{% else %}A tribute to a loved one{% endif %}">
+    <meta name="twitter:image" content="{% if obituary.image %}{{ obituary.image.url }}{% else %}{% static 'john doe.jpg' %}{% endif %}">
+    
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+
+    <style>
+         .navbar {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            transition: background 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #555;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            font-family: Arial, sans-serif;
+            color: #444;
+        }
+
+        /* Grid container styling */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            margin: auto;
+            max-width: 1200px;
+        }
+
+        /* Individual obituary card styling */
+        .obituary-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            background-color: #fff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .obituary-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Obituary image styling */
+        .obituary-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        /* Obituary content styling */
+        .obituary-content {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .obituary-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .obituary-date {
+            color: #666;
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        .obituary-text {
+            color: #555;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        .obituary-author {
+            color: #888;
+            font-size: 0.9em;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .social-share a {
+        display: inline-block;
+        margin-right: 10px;
+        padding: 10px 15px;
+        font-size: 18px;
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        color: #333;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .social-share a:hover {
+        background-color: #ddd;
+    }
+
+    .social-share i {
+        margin-right: 8px;
+    }
+
+    /* Specific color for each platform */
+    .fab.fa-twitter { color: #1DA1F2; }
+    .fab.fa-facebook-f { color: #3b5998; }
+    .fab.fa-linkedin-in { color: #0077b5; }
+    .fab.fa-whatsapp { color: #25D366; }
+    </style>
+</head>
+<body>
+
+     <!-- Navbar -->
+     <div class="navbar">
+        <div><a href="{% url 'view_obituaries' %}">Obituaries</a></div>
+        <div><a href="{% url 'submit_obituary' %}">Add Obituary</a></div>
+    </div>
+
+
+    <h1>Obituaries</h1>
+    <div class="grid-container">
+        {% for obituary in obituaries %}
+            <div class="obituary-card">
+                {% if obituary.image %}
+                    <img src="{{ obituary.image.url }}" alt="{{ obituary.name }}" class="obituary-image">
+                {% else %}
+                    <img src="{% static 'john doe.jpg' %}" alt="Default Image" class="obituary-image">
+                {% endif %}
+                <div class="obituary-content">
+                    <div class="obituary-name">{{ obituary.name }}</div>
+                    <div class="obituary-date">Born: {{ obituary.date_of_birth }} | Died: {{ obituary.date_of_death }}</div>
+                    <div class="obituary-text">{{ obituary.content|truncatewords:20 }}</div>
+                    <div class="obituary-author">Submitted by: {{ obituary.author }}</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="social-share">
+        <!-- Twitter Share Button -->
+        <a href="https://twitter.com/share?url={{ request.build_absolute_uri }}&text={{ obituary.name }} - Obituary" target="_blank">
+            <i class="fab fa-twitter"></i> Share on Twitter
+        </a>
+    
+        <!-- Facebook Share Button -->
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank">
+            <i class="fab fa-facebook-f"></i> Share on Facebook
+        </a>
+    
+        <!-- LinkedIn Share Button -->
+        <a href="https://www.linkedin.com/shareArticle?url={{ request.build_absolute_uri }}" target="_blank">
+            <i class="fab fa-linkedin-in"></i> Share on LinkedIn
+        </a>
+    
+        <!-- WhatsApp Share Button -->
+        <a href="https://api.whatsapp.com/send?text={{ obituary.name }} - Obituary: {{ request.build_absolute_uri }}" target="_blank">
+            <i class="fab fa-whatsapp"></i> Share on WhatsApp
+        </a>
+    </div>
+    
+    
+</body>
+</html>
